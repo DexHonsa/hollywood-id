@@ -1,0 +1,102 @@
+[
+    {
+        "name": "ABC Entertainment Group",
+        "img": "/static/logos/abc.jpg"
+    },
+    {
+        "name": "Amazon Studios",
+        "img": "/static/logos/amazon_studios.jpg"
+    },
+    {
+        "name": "AMC Network",
+        "img": "/static/logos/amc.jpg"
+    },
+    {
+        "name": "Bravo Media",
+        "img": "/static/logos/bravo.jpg"
+    },
+    {
+        "name": "CBS Television",
+        "img": "/static/logos/cbs.jpg"
+    },
+    {
+        "name": "CW Television Network",
+        "img": "/static/logos/cw.jpg"
+    },
+    {
+        "name": "Fox TV",
+        "img": "/static/logos/fox.jpg"
+    },
+    {
+        "name": "Fox 21 Television Studios",
+        "img": "/static/logos/fox21.jpg"
+    },
+    {
+        "name": "F/X Productions",
+        "img": "/static/logos/fx.jpg"
+    },
+    {
+        "name": "Hallmark Channel",
+        "img": "/static/logos/hallmark.jpg"
+    },
+    {
+        "name": "HBO",
+        "img": "/static/logos/hbo.jpg"
+    },
+    {
+        "name": "Lionsgate",
+        "img": "/static/logos/lionsgate.jpg"
+    },
+    {
+        "name": "NBC Entertainment",
+        "img": "/static/logos/nbc.jpg"
+    },
+    {
+        "name": "NBC Universal",
+        "img": "/static/logos/nbc_universal.jpg"
+    },
+    {
+        "name": "Netflix",
+        "img": "/static/logos/netflix.jpg"
+    },
+    {
+        "name": "Paramount TV",
+        "img": "/static/logos/paramount.jpg"
+    },
+    {
+        "name": "Showtime Networks",
+        "img": "/static/logos/showtime.jpg"
+    },
+    {
+        "name": "Sony Pictures Television",
+        "img": "/static/logos/sony.jpg"
+    },
+    {
+        "name": "SYFY Network",
+        "img": "/static/logos/syfy.jpg"
+    },
+    {
+        "name": "TBS",
+        "img": "/static/logos/tbs.jpg"
+    },
+    {
+        "name": "Universal Cable Productions",
+        "img": "/static/logos/universal_cable.jpg"
+    },
+    {
+        "name": "Universal Studios",
+        "img": "/static/logos/universal.jpg"
+    },
+    {
+        "name": "VH1 Network",
+        "img": "/static/logos/vh1.jpg"
+    },
+    {
+        "name": "Warner Bros. TV",
+        "img": "/static/logos/wb.jpg"
+    },
+    {
+        "name": "Warner Horizon TV",
+        "img": "/static/logos/warner_horizon.jpg"
+    }
+]

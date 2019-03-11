@@ -1,0 +1,71 @@
+[
+    {
+        "name": "Columbia Pictures",
+        "img": "/static/logos/columbia-pictures-logo.jpg"
+    },
+    {
+        "name": "Focus Features",
+        "img": "/static/logos/focus_features_logo.jpg"
+    },
+    {
+        "name": "Fox 2000",
+        "img": "/static/logos/hqdefault.jpg"
+    },
+    {
+        "name": "Fox Studios",
+        "img": "/static/logos/fox_studios.jpg"
+    },
+    {
+        "name": "Fox Searchlight",
+        "img": "/static/logos/fox-searchlight-logo.jpg"
+    },
+    {
+        "name": "Lionsgate",
+        "img": "/static/logos/lionsgate.jpg"
+    },
+    {
+        "name": "MGM",
+        "img": "/static/logos/MGM.jpg"
+    },
+    {
+        "name": "New Line Cinema",
+        "img": "/static/logos/new-line.jpg"
+    },
+    {
+        "name": "Paramount Pictures",
+        "img": "/static/logos/paramount.jpg"
+    },
+    {
+        "name": "Relativity",
+        "img": "/static/logos/relativity.png"
+    },
+    {
+        "name": "Screen Gems",
+        "img": "/static/logos/screen-gems-logo-featured.jpg"
+    },
+    {
+        "name": "Sony Animation",
+        "img": "/static/logos/sony-pictures-animation-logo.jpg"
+    },
+    {
+        "name": "Sony Pictures Entertainment",
+        "img": "/static/logos/sony_pictures.jpg"
+    },
+    {
+        "name": "Tristar",
+        "img": "/static/logos/tristar.jpg"
+    },
+    {
+        "name": "Universal",
+        "img": "/static/logos/universal_studios.jpg"
+    },
+    {
+        "name": "Walt Disney",
+        "img": "/static/logos/disney_pictures.jpg"
+    },
+    {
+        "name": "Warner Bros.",
+        "img": "/static/logos/Warner-Brothers-logo.png"
+    }
+]
+    
