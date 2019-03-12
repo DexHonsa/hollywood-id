@@ -43,6 +43,73 @@ app.use('/api/ifp', ifpRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/ratings', ratingRoutes);
 
+app.post('/api/contact_us', (req,res)=>{
+  const {name, email, message} = req.body;
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    secure: false,
+    port: 25,
+    auth: {
+      user: "dexhonsa@gmail.com",
+      pass: "Awesomeo21!23!24!"
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
+
+  const emailOutputToUser = `
+<div style="background:#f8f8f8; text-align: center; width:100%; padding:30px 15px;box-sizing: border-box;">
+<div style="max-width: 500px; width:100%; background:#fff; text-align: center;display: inline-block; border:solid 1px #eaeaea; border-radius: 3px;box-sizing: border-box;">
+<div>
+<img src="https://hollywood-id.com/img/hollywood_blue_blur.cd0a2825.jpg" alt="" width="100%">
+</div>
+<div style="margin-top:10px;">
+<img src="https://hollywood-id.com/img/logo_black.63f50681.png" alt="" style="max-height:100px; padding-left:15px; max-width:90%;">
+</div>
+<div style="padding:15px">
+<div style="color:#000;  font-size: 12pt; font-family: Arial; font-weight: bold; margin:10px 0px; display: inline-block">Contact Us Message</div>
+<div style=" font-size: 10pt; padding:15px;
+color:#808080;
+font-family:Arial;
+">
+${name}(${email}) has contacted us with this message:
+</div>
+<div style="font-size:15pt; color:#000; font-weight:bold; border:solid 1px #eaeaea; border-radius:3px; white-space:pre-wrap; padding:15px;">${message}</div>
+<div style=" font-size: 10pt; padding:15px;
+color:#808080;
+font-family:Arial;
+">
+</div>
+</div>
+
+</div><br>
+<div style="display: inline-block; font-size: 10pt;
+font-family:Arial; color:#AFAFAF; margin-top:15px">
+Hollywood Insider Directory | 77900 Country Club Dr | Palm Desert, CA 92211
+</div>
+</div>
+`;
+
+  let mailOptionsToUser = {
+    from: '"Hollywood ID" <support@hid.com>', // sender address
+    to: 'dexhonsa@hotmail.com', // list of receivers
+    subject: `${name} Contact Us Form`, // Subject line
+    text: "Hello world?", // plain text body
+    html: emailOutputToUser // html body
+  };
+
+  transporter.sendMail(mailOptionsToUser, (error, info) => {
+    if (error) {
+      res.status(500).send({message:'There was an error'})
+    }
+    console.log("User sent: %s", info.messageId);
+    res.status(200).send({ message: "sent", id: info.messageId });
+  });
+  
+
+})
+
 app.get('/api/get_credits', (req, res)=>{
   var name = req.query.name;
 

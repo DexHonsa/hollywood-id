@@ -9,6 +9,9 @@ import AdminRoutes from './admin';
 import IfpRoutes from './ifp';
 import PayWall from '@/components/pay_wall';
 import AboutUs from '@/components/login/about_us';
+import TOS from '@/components/login/tos';
+import PP from '@/components/login/privacy_policy';
+import Contact from '@/components/login/contact_us';
 
 import Header from '@/components/header';
 
@@ -66,6 +69,30 @@ var baseRoutes = [
     path: "/about_us",
     components: {
       default: AboutUs,
+      header:Header,
+      footer:Footer
+    }
+  },
+  {
+    path: "/tos",
+    components: {
+      default: TOS,
+      header:Header,
+      footer:Footer
+    }
+  },
+  {
+    path: "/privacy_policy",
+    components: {
+      default: PP,
+      header:Header,
+      footer:Footer
+    }
+  },
+  {
+    path: "/contact_us",
+    components: {
+      default: Contact,
       header:Header,
       footer:Footer
     }

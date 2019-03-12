@@ -1167,7 +1167,7 @@ table td {
 .web-top-bar.scrolled .top-nav li,
 .web-top-bar.scrolled .top-nav li div {
   color: #f8fafb;
-  border-color: #fff;
+  
 }
 .web-top-bar.scrolled {
   top: 0;

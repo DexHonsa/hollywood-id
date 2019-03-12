@@ -37,6 +37,7 @@ router.post("/", (req, res, next) => {
                     setupBegan: true
                   });
                 } else {
+                  console.log(result);
                   var token = jwt.sign(
                     {
                       id: result._id,
@@ -76,6 +77,7 @@ router.post("/", (req, res, next) => {
               }
             );
           } else {
+            console.log(result);
             var token = jwt.sign(
               {
                 id: result._id,
@@ -87,7 +89,7 @@ router.post("/", (req, res, next) => {
                 cus_id: result.cus_id,
                 sub_id: result.sub_id,
                 image: result.image,
-                reset_password:result.reset_password
+                password_reset:result.password_reset
               },
               config.secret,
               {
@@ -141,7 +143,7 @@ router.post("/reset_password", (req, res) => {
             port: 25,
             auth: {
               user: "dexhonsa@gmail.com",
-              pass: "Awesomeo21!23!"
+              pass: "Awesomeo21!23!24!"
             },
             tls: {
               rejectUnauthorized: false
@@ -163,7 +165,7 @@ router.post("/reset_password", (req, res) => {
       color:#808080;
       font-family:Arial;
       ">
-        Here is your new password    To manage your subscription, please login to your account <a href="https://hollywood-id.com/">here</a>
+        Here is your new password. To manage your subscription, please login to your account <a href="https://hollywood-id.com/">here</a>
       </div>
       <div style="font-size:15pt; color:#000; font-weight:bold; border:solid 1px #eaeaea; border-radius:3px; padding:15px;">${token}</div>
       <div style=" font-size: 10pt; padding:15px;

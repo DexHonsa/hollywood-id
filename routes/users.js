@@ -8,7 +8,7 @@ var jwt = require("jsonwebtoken");
 var config = require("../config");
 var crypto = require("crypto");
 var fs = require("fs-extra");
-
+var nodemailer = require("nodemailer");
 var URL =
   "mongodb://dexhonsa:Awesomeo21!@hid-shard-00-00-6vaxg.mongodb.net:27017,hid-shard-00-01-6vaxg.mongodb.net:27017,hid-shard-00-02-6vaxg.mongodb.net:27017/test?ssl=true&replicaSet=HID-shard-0&authSource=admin&retryWrites=true";
 var storage = multer.diskStorage({
@@ -84,24 +84,107 @@ function makeid() {
 
 router.post("/add_new_user", (req, res)=>{
   var email = req.body.email;
-  var tmpPass = makeid();
+  var first_name = req.body.first_name;
+  var last_name = req.body.last_name;
+  var token = makeid();
+  var tokenHash = crypto
+    .createHash("md5")
+    .update(token)
+    .digest("hex");
 
   MongoClient.connect(
     URL,
     function(err, db) {
       if (err) throw err;
       var collection = db.collection("users");
-      collection
-        .insert({ "email": email }, {$set:{role:'admin'}}).then(result=>{
+      collection.find({email:email}).toArray().then(array=>{
+        if(array.length == 0){
+          collection
+          .insert({
+            email: email.toLowerCase().trim(),
+            password: tokenHash,
+            role: "normal",
+            first_name,
+            last_name,
+            is_active:true,
+            created_at: new Date(),
+            //is_active:false,
+            password_reset:true
+          }).then(result=>{
+            
+            if(result != null){
+              res.status(200).send({message:'success'});
+              let transporter = nodemailer.createTransport({
+                service: "gmail",
+                secure: false,
+                port: 25,
+                auth: {
+                  user: "dexhonsa@gmail.com",
+                  pass: "Awesomeo21!23!24!"
+                },
+                tls: {
+                  rejectUnauthorized: false
+                }
+              });
+    
+              const emailOutputToUser = `
+        <div style="background:#f8f8f8; text-align: center; width:100%; padding:30px 15px;box-sizing: border-box;">
+        <div style="max-width: 500px; width:100%; background:#fff; text-align: center;display: inline-block; border:solid 1px #eaeaea; border-radius: 3px;box-sizing: border-box;">
+        <div>
+        <img src="https://hollywood-id.com/img/hollywood_blue_blur.cd0a2825.jpg" alt="" width="100%">
+        </div>
+        <div style="margin-top:10px;">
+          <img src="https://hollywood-id.com/img/logo_black.63f50681.png" alt="" style="max-height:100px; padding-left:15px; max-width:90%;">
+        </div>
+        <div style="padding:15px">
+          <div style="color:#000;  font-size: 12pt; font-family: Arial; font-weight: bold; margin:10px 0px; display: inline-block">Welcome to HID!</div>
+          <div style=" font-size: 10pt; padding:15px;
+          color:#808080;
+          font-family:Arial;
+          ">
+            Your account is setup and waiting for you! Please login to your account with your temporary password <a href="https://hollywood-id.com/">here</a>
+          </div>
+          <div style="font-size:15pt; color:#000; font-weight:bold; border:solid 1px #eaeaea; border-radius:3px; padding:15px;">${token}</div>
+          <div style=" font-size: 10pt; padding:15px;
+          color:#808080;
+          font-family:Arial;
+          ">
+            Please use this token to login to your account and change your password.
+          </div>
+          </div>
           
-          if(result.value != null){
-            res.status(200).send({message:'success'});
-          }else{
-            res.status(500).send({message:'User not found'});
-          }
-        },err=>{
-          res.status(500).send({message:'User not found'});
-        })
+        </div><br>
+        <div style="display: inline-block; font-size: 10pt;
+          font-family:Arial; color:#AFAFAF; margin-top:15px">
+            Hollywood Insider Directory | 77900 Country Club Dr | Palm Desert, CA 92211
+          </div>
+          </div>
+        `;
+    
+              let mailOptionsToUser = {
+                from: '"Hollywood ID" <support@hid.com>', // sender address
+                to: email, // list of receivers
+                subject: "Youve been invited to join the Hollywood Insider Directory!", // Subject line
+                text: "Hello world?", // plain text body
+                html: emailOutputToUser // html body
+              };
+    
+              transporter.sendMail(mailOptionsToUser, (error, info) => {
+                if (error) {
+                  return console.log(error);
+                }
+                console.log("User sent: %s", info.messageId);
+              });
+              res.send({ message: "sent" });
+            }
+          },err=>{
+            res.status(500).send({message:'Error'});
+          })
+        }else{
+          res.status(500).send({message:'User has already been invited'})
+        }
+      })
+      
     }
   );
 })

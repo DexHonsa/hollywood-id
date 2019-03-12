@@ -40,6 +40,7 @@
             @click="activateTab(1)"
             class="profile-tab"
             :class="{'active':activeTab == 1}"
+            v-if="user.sub_id != null"
           >Subscription
             <div class="profile-tab-bottom-bar"></div>
           </div>

@@ -101,6 +101,8 @@ export default {
       this.isLoading = true;
       var form = event.target;
       var data = new FormData(form);
+      this.hasError = false;
+      this.hasForgotPassword = false;
       data = data.entries();
       var obj = data.next();
       var retrieved = {};

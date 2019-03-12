@@ -163,7 +163,11 @@
               <span
                 class="sub-text"
                 style="text-align:center;"
-              >Find thousands of people in our online directory of Hollywood decision makers. We want our platform to manage and advance your career or projects.</span>
+              >The Hollywood Insider Directory is a digital, up to-the minute source of current entertainment financiers, movie studios, television networks and production companies. It has names, numbers and addresses for studios, network executives, agents, managers, as well as, “insider” information for aspiring writers, directors and producers. This invaluable source is now back and online for your search.
+                <br>
+                <br>
+                <strong>Welcome to the Hollywood Insider Directory!</strong>
+              </span>
             </div>
           </div>
         </div>

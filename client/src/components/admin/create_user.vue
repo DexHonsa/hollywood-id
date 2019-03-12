@@ -4,7 +4,13 @@
       <form class="learn-more-form" @submit.prevent="submitForm">
       <div class="login-panel-title">Add New User</div>
       <div class="modal-inner" style="text-align:center;">
-          <input v-model="email" type="text" class="standard-input" name="email" placeholder="Enter Email">
+        <input type="text" v-validate="'required'" class="standard-input" name='first_name' v-model="first_name" placeholder="First Name">
+         <span v-show="errors.has('first_name')" class="help is-danger">{{ errors.first('first_name') }}</span>
+        <input type="text" v-validate="'required'" class="standard-input" name='last_name' v-model="last_name" placeholder="Last Name">
+         <span v-show="errors.has('last_name')" class="help is-danger">{{ errors.first('last_name') }}</span>
+          <input v-model="email" v-validate="'required'" type="text" class="standard-input" name="email" placeholder="Enter Email">
+           <span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
+          
           <p>An email will be sent with login instructions.</p>
      </div>
         
@@ -16,6 +22,7 @@
     
     </div>
     <div v-if="hasError" class="alert-danger animated fadeIn" style="color:#ff0000; position:relative; margin-top:70px;">{{errorMessage}}</div>
+    <div v-if="success" class="alert-danger animated fadeIn" style="color:#33aa44; background:#33aa4420; position:relative; margin-top:70px;">Invitation Sent!</div>
     </form>
     </div>
     </div>
@@ -32,7 +39,8 @@ export default {
       hasError: false,
       isLoading: false,
       errorMessage: "",
-      email: ""
+      email: "",
+      success: false
     };
   },
   $_veeValidate: {
@@ -48,20 +56,33 @@ export default {
     },
     submitForm() {
       this.isLoading = true;
-      axios
-        .post("/api/users/add_new_user", {
-          email: this.email
-        })
-        .then(
-          res => {
-            this.hide();
-          },
-          err => {
-            this.hasError = true;
-            this.errorMessage = err.response.data.message;
-            this.isLoading = false;
-          }
-        );
+      this.$validator.validateAll().then(result => {
+        if (!result) {
+          this.isLoading = false;
+          return;
+        }
+        if (!this.errors.any()) {
+          axios
+            .post("/api/users/add_new_user", {
+              email: this.email,
+              first_name: this.first_name,
+              last_name: this.last_name
+            })
+            .then(
+              res => {
+                this.success = true;
+                this.hasError = false;
+                this.isLoading = false;
+              },
+              err => {
+                this.success = false;
+                this.hasError = true;
+                this.errorMessage = err.response.data.message;
+                this.isLoading = false;
+              }
+            );
+        }
+      });
     }
   }
 };

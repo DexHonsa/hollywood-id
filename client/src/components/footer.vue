@@ -8,8 +8,7 @@
         >
           <div class="footer-links">
             <div @click="$router.push('/about_us')" class="footer-link">About</div>
-            <div class="footer-link">Company</div>
-            <div class="footer-link">Learn More</div>
+            <div @click="$router.push('/tos')" class="footer-link">Terms of Service</div>
           </div>
         </div>
         <div
@@ -17,9 +16,8 @@
           style="display:flex;align-items:center; justify-content:center; text-align:left; "
         >
           <div class="footer-links">
-            <div class="footer-link">Benefits</div>
-            <div class="footer-link">Jobs</div>
-            <div class="footer-link">Privacy Policy</div>
+            <div @click="$router.push('/contact_us')" class="footer-link">Contact Us</div>
+            <div @click="$router.push('/privacy_policy')" class="footer-link">Privacy Policy</div>
           </div>
         </div>
       </div>
