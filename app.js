@@ -134,10 +134,14 @@ app.get('/api/get_credits', (req, res)=>{
 
 app.get("/api/get_movie", (req,res)=>{
    var movie =  req.query.movie;
-  imdb.get({name: movie}, {apiKey: '1dbe796d', timeout: 30000}).then(data=>{
-    res.status(200).send(data)
-  },err=>{
-    res.status(500).send({message:"error"})
+   var type = req.query.type;
+   axios.get(`https://api.themoviedb.org/3/search/${type}?query=${movie}&api_key=852f55d6bb8246c27b18a4ef34f28de3`).then(res2=>{
+    if(res2.data.results[0] != null){
+      res.status(200).send(res2.data.results[0])
+    }else{
+      res.status(500).send({message:'Error none found'});
+    }
+    
   })
   
 })

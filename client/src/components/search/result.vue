@@ -139,6 +139,8 @@
               </div>
             </div>
           </div>
+
+          <!-- Film Credits ===================================================== -->
           <div class="result-content">
             <div style="min-width:100%;" class="row">
               <div v-if="worksLoading" class="works-loading">
@@ -150,7 +152,7 @@
                     <img src="../../img/film_icon.png" alt>
                   </div>
                   <div class="credits-container">
-                    <div class="credits-item-title">Acted In</div>
+                    <div class="credits-item-title">Film Credits</div>
                     <div class="credits-item-value">
                       <div class="film-item" v-for="(film, i) in films" :key="i">
                         <div v-if="film.poster_path != 'N/A'" class="film-poster">
@@ -176,6 +178,7 @@
                 </div>
               </div>
             </div>
+            <!-- Crew Credits ===================================================== -->
             <div style="min-width:100%;" class="row">
               <div v-if="crewCredits.length > 0" class="col-sm-12">
                 <div class="credits-item film">
@@ -216,7 +219,7 @@
                     <img src="../../img/film_icon.png" alt>
                   </div>
                   <div class="credits-container">
-                    <div class="credits-item-title">Appeared in TV</div>
+                    <div class="credits-item-title">TV Credits</div>
                     <div class="credits-item-value">
                       <div class="film-item" v-for="(film, i) in tv" :key="i">
                         <div v-if="film.poster_path != 'N/A'" class="film-poster">
@@ -378,6 +381,8 @@ export default {
     return {
       isLoading: true,
       films: [],
+      otherFilms: [],
+      otherTv: [],
       crew: [],
       tv: [],
       tvCrew: [],
@@ -429,16 +434,26 @@ export default {
       this.worksLoading = true;
       window.scrollTo(0, 0);
       this.getProfessional(this.$route.params.id).then(result => {
+        this.otherFilms = result.film_credits.split(",");
+        this.otherTv = result.tv_credits.split(",");
+
         axios.get(`/api/get_credits?name=${result.name}`).then(
           res => {
             var movies = res.data.movie;
             var tv = res.data.tv;
             var mC = [];
             this.films = movies.cast;
+            this.getOtherFilms().then(items => {
+              this.films = this.films.concat(items);
+            });
             this.crew = movies.crew;
             if (tv.cast != null) {
               this.tv = tv.cast;
             }
+
+            this.getOtherTv().then(items => {
+              this.tv = this.tv.concat(items);
+            });
             this.tvCrew = tv.crew;
             this.worksLoading = false;
           },
@@ -483,17 +498,56 @@ export default {
       return `<a href='mailto:` + word + `'>` + word + `</a>`;
     },
     getMovie(movie, type) {
-      console.log(type);
-      axios.get("/api/get_movie?movie=" + movie).then(
-        res => {
-          //console.log(res.data);
-          this[type].push(res.data);
-        },
-        err => {
-          this[type].push({ name: movie, poster: "N/A" });
-          console.log("error bruh");
+      return new Promise((resolve, reject) => {
+        axios.get(`/api/get_movie?movie=${movie}&type=${type}`).then(
+          res => {
+            resolve(res.data);
+          },
+          err => {
+            console.log("error bruh");
+          }
+        );
+      });
+    },
+    getOtherFilms() {
+      return new Promise((resolve, reject) => {
+        var mFilms = this.otherFilms;
+        var arr = [];
+        var promiseArr = [];
+        for (let i = 0; i < mFilms.length; i++) {
+          var contains_films = this.films.filter(item => {
+            return item.title.toLowerCase().indexOf(mFilms[i]);
+          });
+          if (contains_films.length < 1) {
+            if (mFilms[i] != "") {
+              promiseArr.push(this.getMovie(mFilms[i], "movie"));
+            }
+          }
         }
-      );
+        Promise.all(promiseArr).then(a => {
+          resolve(a);
+        });
+      });
+    },
+    getOtherTv() {
+      return new Promise((resolve, reject) => {
+        var mFilms = this.otherTv;
+        var arr = [];
+        var promiseArr = [];
+        for (let i = 0; i < mFilms.length; i++) {
+          var contains_films = this.tv.filter(item => {
+            return item.title.toLowerCase().indexOf(mFilms[i]);
+          });
+          if (contains_films.length < 1) {
+            if (mFilms[i] != "") {
+              promiseArr.push(this.getMovie(mFilms[i], "tv"));
+            }
+          }
+        }
+        Promise.all(promiseArr).then(a => {
+          resolve(a);
+        });
+      });
     }
   },
   computed: {
@@ -527,6 +581,7 @@ export default {
       }
       return newCredits;
     },
+
     user() {
       return this.$store.state.userStore.user;
     },
