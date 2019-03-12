@@ -39,9 +39,11 @@ router.post("/get_ifp", (req, res, next) => {
       var collection = db.collection("listings");
       collection.find({company: reg}).toArray().then(
         result => {
+          db.close();
           res.status(200).send(result);
         },
         err => {
+          db.close();
           res.status(500).send({ message: "Error" });
         }
       );

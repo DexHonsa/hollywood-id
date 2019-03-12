@@ -38,9 +38,11 @@ router.post("/get_executives", (req, res, next) => {
       var collection = db.collection("listings");
       collection.find({company}).toArray().then(
         result => {
+          db.close();
           res.status(200).send(result);
         },
         err => {
+          db.close();
           res.status(500).send({ message: "Error" });
         }
       );

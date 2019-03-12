@@ -31,6 +31,7 @@ router.post("/", (req, res, next) => {
               result.sub_id,
               (err, subscriptions) => {
                 if (err) {
+                  db.close();
                   res.send({
                     success: false,
                     message: `Error: ${err.message}`,
@@ -65,6 +66,7 @@ router.post("/", (req, res, next) => {
                       );
                     });
                   }
+                  db.close();
                   res.send({ auth: true, token: token });
 
                   //   res.send({
@@ -77,7 +79,7 @@ router.post("/", (req, res, next) => {
               }
             );
           } else {
-            console.log(result);
+            
             var token = jwt.sign(
               {
                 id: result._id,
@@ -96,14 +98,16 @@ router.post("/", (req, res, next) => {
                 expiresIn: 86400 // expires in 24 hours
               }
             );
-
+            db.close();
             res.send({ auth: true, token: token });
           }
         } else {
+          db.close();
           res.status(401).send({ error: "Incorrect Credentials" });
         }
       },
       err => {
+        db.close();
         res.status(401).send({ error: err });
       }
     );
@@ -198,9 +202,11 @@ router.post("/reset_password", (req, res) => {
             }
             console.log("User sent: %s", info.messageId);
           });
+          db.close();
           res.send({ message: "sent" });
         },
         err => {
+          db.close();
           res.status(500).send({ message: "error burh" });
         }
       );
@@ -224,9 +230,11 @@ router.post("/new_password", (req, res) => {
     var collection = db.collection("users");
     collection.findOneAndUpdate({ _id: ObjectId(id) }, {$set:{password: passwordHash, password_reset:false}}).then(
       result => {
+        db.close();
         res.status(200).send({message:'success'})
       },
       err => {
+        db.close();
         res.status(500).send({ message: "error burh" });
       }
     );
@@ -254,9 +262,11 @@ router.post("/change_password", (req, res) => {
     collection.findOne({ _id: ObjectId(id), password: passwordHash }).then(
       result => {
         if (result == null) {
+          db.close();
           res.status(500).send({ message: "Current password was incorrect" });
         } else {
           if (newPassword.length < 6) {
+            db.close();
             res
               .status(500)
               .send({ message: "Password Must be at least 6 characters" });
@@ -267,6 +277,7 @@ router.post("/change_password", (req, res) => {
                 { $set: { password: newPasswordHash } }
               )
               .then(result2 => {
+                db.close();
                 res
                   .status(200)
                   .send({ message: "Password Successfully Changed." });
@@ -357,9 +368,11 @@ router.patch("/edit/:id", (req, res, next) => {
       .findOneAndUpdate({ _id: ObjectId(req.params.id) }, { $set: options })
       .then(
         result => {
+          db.close();
           res.status(200).send({ message: "success" });
         },
         err => {
+          db.close();
           res.status(401).send({ message: "There was an Error" });
         }
       );
@@ -409,12 +422,14 @@ router.post("/signup", (req, res, next) => {
             created_at: new Date()
           })
           .then(result => {
+            db.close();
             res.send({
               userId: result.ops[0]["_id"],
               message: "Created Succesfully"
             });
           });
       } else {
+        db.close();
         res.status(401).send({ error: "Email Exists" });
       }
     });

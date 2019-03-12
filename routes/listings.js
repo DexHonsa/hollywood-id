@@ -42,9 +42,11 @@ router.post("/add", (req, res, next) => {
       var collection = db.collection("listings");
       collection.insertMany(docs).then(
         result => {
+          db.close();
           res.status(200).send({ message: "success" });
         },
         err => {
+          db.close();
           res.status(500).send({ message: "Error" });
         }
       );
@@ -59,6 +61,7 @@ router.get("/get_listing/:id", (req, res, next) => {
     if (err) throw err;
     var collection = db.collection("listings");
     collection.findOne({ _id: ObjectId(id) }).then(result=>{
+      db.close();
       res.send(result);
     })
             
@@ -76,9 +79,11 @@ router.post("/edit_listing/:id", (req, res, next) => {
       var collection = db.collection("listings");
       collection.findOneAndUpdate( {_id: ObjectId(id)}, {$set:update}).then(
         result => {
+          db.close();
           res.status(200).send({ message: "success" });
         },
         err => {
+          db.close();
           res.status(500).send({ message: "Error" });
         }
       );
@@ -96,9 +101,11 @@ router.delete("/delete/:id", (req, res, next) => {
       var collection = db.collection("listings");
       collection.deleteOne( {_id: ObjectId(id)}).then(
         result => {
+          db.close();
           res.status(200).send({ message: "success" });
         },
         err => {
+          db.close();
           res.status(500).send({ message: "Error" });
         }
       );
@@ -119,9 +126,11 @@ router.post("/add_listing", (req, res, next) => {
           var collection = db.collection("listings");
           collection.insert(listing).then(
             result => {
+              db.close();
               res.status(200).send({ message: "success" });
             },
             err => {
+              db.close();
               res.status(500).send({ message: "Error" });
             }
           );
@@ -129,9 +138,11 @@ router.post("/add_listing", (req, res, next) => {
           var collection = db.collection("pending_listings");
           collection.insert(listing).then(
             result => {
+              db.close();
               res.status(200).send({ message: "success", pending: true });
             },
             err => {
+              db.close();
               res.status(500).send({ message: "Error" });
             }
           );
@@ -172,6 +183,7 @@ router.post("/add_image", (req, res, next) => {
         "./uploads"+'/' + fileName,
         { overwrite: false }
       ).then(result => {
+        db.close();
           res.status(200).send({message:'uploaded'});
         // MongoClient.connect(
         //   URL,
@@ -191,7 +203,7 @@ router.post("/add_image", (req, res, next) => {
         //     });
         //   }
         // );
-      }).catch((err)=>{res.status(401).send({message:'already exists'})});
+      }).catch((err)=>{db.close(); res.status(401).send({message:'already exists'})});
     });
   });
 });

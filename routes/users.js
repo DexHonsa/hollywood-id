@@ -37,8 +37,10 @@ router.get("/get_admins", (req, res)=>{
       collection
         .find({ "role": "admin" }).toArray().then(result=>{
           if(result.length > 0){
+            db.close();
             res.status(200).send({message:'success', result});
           }else{
+            db.close();
             res.status(500).send({message:'error'});
           }
         })
@@ -60,11 +62,14 @@ router.post("/add_admin", (req, res)=>{
         .findOneAndUpdate({ "email": email }, {$set:{role:'admin'}}).then(result=>{
           
           if(result.value != null){
+            db.close();
             res.status(200).send({message:'success'});
           }else{
+            db.close();
             res.status(500).send({message:'User not found'});
           }
         },err=>{
+          db.close();
           res.status(500).send({message:'User not found'});
         })
     }
@@ -175,12 +180,15 @@ router.post("/add_new_user", (req, res)=>{
                 }
                 console.log("User sent: %s", info.messageId);
               });
+              db.close();
               res.send({ message: "sent" });
             }
           },err=>{
+            db.close();
             res.status(500).send({message:'Error'});
           })
         }else{
+          db.close();
           res.status(500).send({message:'User has already been invited'})
         }
       })
@@ -199,8 +207,10 @@ router.post("/remove_admin", (req, res)=>{
       collection
         .findOneAndUpdate({ "email": email }, {$set:{role:'normal'}}).then(result=>{
           if(result != null){
+            db.close();
             res.status(200).send({message:'success'});
           }else{
+            db.close();
             res.status(500).send({message:'error'});
           }
         })
@@ -225,6 +235,7 @@ router.get("/", (req, res, next) => {
         .find({})
         .toArray()
         .then(result => {
+          db.close();
           res.json(result);
         });
     }
@@ -250,6 +261,7 @@ router.post("/", (req, res, next) => {
         .insert({ username: username, password: passwordHash, email: email })
 
         .then(result => {
+          db.close();
           res.json(result);
         });
     }
@@ -266,8 +278,10 @@ router.get("/:id", (req, res)=>{
       collection
         .findOne({ _id: ObjectId(id) }).then(result=>{
           if(result != null){
+            db.close();
             res.status(200).send({message:'success', user:result});
           }else{
+            db.close();
             res.status(500).send({message:'error'});
           }
         })
@@ -289,6 +303,7 @@ router.get("/user/:id", (req, res) => {
           var token = jwt.sign({ id: result._id, role:result.role, email: result.email, is_active:result.is_active, first_name: result.first_name, last_name:result.last_name, cus_id:result.cus_id, sub_id: result.sub_id, image:result.image }, config.secret, {
             expiresIn: 86400 // expires in 24 hours
           });
+          db.close();
           res.status(200).send({ message: 'success', token });
         } else {
           // res.status(500).send({ message: "error" });
@@ -322,6 +337,7 @@ router.patch("/:id", (req, res, next) => {
         )
 
         .then(result => {
+          db.close();
           res.json(result);
         });
     }
@@ -341,6 +357,7 @@ router.delete("/:id", (req, res, next) => {
       if (err) throw err;
       var collection = db.collection("users");
       collection.remove({ _id: ObjectId(id) }).then(result => {
+        db.close();
         res.json(result);
       });
     }
@@ -349,7 +366,6 @@ router.delete("/:id", (req, res, next) => {
 
 router.post("/add_image/:id", (req, res, next) => {
   const id = req.params.id;
-  console.log("OK");
 
   upload(req, res, function(err) {
     if (err) {
@@ -357,7 +373,7 @@ router.post("/add_image/:id", (req, res, next) => {
     }
     var extension = req.file.filename.substr(-4);
     var fileName = req.file.filename;
-    console.log(req.file.filename);
+
     fs.rename("./tmp/" + req.file.filename, "./tmp/" + fileName).then(res1 => {
       fs.move("./tmp/" + fileName, "./user_uploads" + "/" + fileName, {
         overwrite: false
@@ -371,9 +387,8 @@ router.post("/add_image/:id", (req, res, next) => {
               var collection = db.collection("users");
 
               collection.findOne({ _id: ObjectId(id) }).then(result => {
-                // console.log(result);
                 if (result != null) {
-                  //console.log(result);
+
                   res.send("success");
                   collection
                     .update(
@@ -381,11 +396,13 @@ router.post("/add_image/:id", (req, res, next) => {
                       { $set: { image: fileName } }
                     )
                     .then(result => {
+                      db.close();
                       res
                         .status(200)
                         .send({ message: "uploaded", filename: fileName });
                     });
                 } else {
+                  db.close();
                   res.status(401).send({ error: "none found" });
                 }
               });
@@ -393,6 +410,7 @@ router.post("/add_image/:id", (req, res, next) => {
           );
         })
         .catch(err => {
+          db.close();
           res.status(401).send({ message: "already exists" });
         });
     });

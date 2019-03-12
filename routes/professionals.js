@@ -34,6 +34,7 @@ var URL =
       call.toArray(function(err, result){
         
         collection.count(query).then(count=>{
+          db.close();
           res.send({query, items:result, total:count});
           // res.send({items:result, total:count});
         })
@@ -67,6 +68,7 @@ var URL =
       call.toArray(function(err, result){
         
         collection.count(query).then(count=>{
+          db.close();
           res.send({query, items:result, total:count});
           // res.send({items:result, total:count});
         })
@@ -82,6 +84,7 @@ var URL =
     MongoClient.connect(URL, function(err, db) {
       var collection = db.collection("listings");
       collection.find({name:{$regex:query, $options : 'i'}}).toArray().then(result=>{
+        db.close();
         res.status(200).json(result);
       })
     })
@@ -94,6 +97,7 @@ var URL =
       if (err) throw err;
       var collection = db.collection("listings");
       collection.findOne({ _id: ObjectId(id) }).then(result=>{
+        db.close();
         res.send(result);
       })
               
@@ -107,6 +111,7 @@ var URL =
       if (err) throw err;
       var collection = db.collection("pending_listings");
       collection.findOne({ _id: ObjectId(id) }).then(result=>{
+        db.close();
         res.send(result);
       })
               
@@ -114,20 +119,21 @@ var URL =
   });
 
   router.get("/approve_pending_listing/:id", (req, res, next) => {
-    
     var id = req.params.id;
-    console.log(id)
+
     MongoClient.connect(URL, function(err, db) {
       if (err) throw err;
       var collection = db.collection("pending_listings");
       collection.findOne({ _id: ObjectId(id) }).then(result=>{
-        console.log(result);
+
         var listings = db.collection("listings");
         listings.insert(result).then(result2=>{
           collection.remove({_id:ObjectId(id)}).then(result3=>{
+            db.close();
             res.status(200).send({message:'success'});
           })
         })
+        db.close();
         res.send(result);
       })
               
@@ -141,6 +147,7 @@ var URL =
       if (err) throw err;
       var collection = db.collection("pending_listings");
       collection.findOneAndUpdate({ _id: ObjectId(id) }, {$set:{pending:false}}).then(result=>{
+        db.close();
         res.status(200).send({message:"success"})
       })
               

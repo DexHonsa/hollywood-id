@@ -51,12 +51,13 @@ router.get("/get_rating/:id", (req, res, next) => {
             avg = 0;
           }
           listings.findOneAndUpdate({_id:ObjectId(listing_id)}, {$set:{rating:avg}}).then((result2)=>{
-            // console.log(result2);
+            db.close();
             res.status(200).send({ message: "success", avg });
           })
           //res.status(200).send({ message: "success",  });
         },
         err => {
+          db.close();
           res.status(500).send({ message: "Error" });
         }
       );
