@@ -434,8 +434,17 @@ export default {
       this.worksLoading = true;
       window.scrollTo(0, 0);
       this.getProfessional(this.$route.params.id).then(result => {
-        this.otherFilms = result.film_credits.split(",");
-        this.otherTv = result.tv_credits.split(",");
+        if (result.film_credits != null) {
+          this.otherFilms = result.film_credits.split(",");
+        } else {
+          this.otherFilms = [];
+        }
+
+        if (result.film_credits != null) {
+          this.otherTv = result.tv_credits.split(",");
+        } else {
+          this.otherTv = [];
+        }
 
         axios.get(`/api/get_credits?name=${result.name}`).then(
           res => {
