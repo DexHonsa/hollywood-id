@@ -29,7 +29,7 @@
                       <li v-if="suggestions.length == 0">No Results</li>
                       <li
                         v-for="(item, index) in suggestions"
-                        @click.stop="selectSuggestion(item.name)"
+                        @click.stop="selectSuggestion(item.post_title)"
                         :key="index"
                         style="display:flex;align-items:center;"
                       >
@@ -37,7 +37,7 @@
                           v-if="item.image != null"
                           class="result-image"
                           style="width:25px; height:25px; margin-right:10px;"
-                          :style="'background-image:url(/api/static/' + item.image + ');'"
+                          :style="'background-image:url(/api/static/' + encodeURIComponent(item.image.trim()) + ');'"
                         ></div>
 
                         <div
@@ -52,7 +52,7 @@
                           </div>
                         </div>
                         <div>
-                          {{item.name}}
+                          {{item.post_title}}
                           <br>
                           <div
                             style="display:flex; align-items:center; font-size:8pt; font-weight:300; color:#808080"
@@ -147,7 +147,7 @@
                       <div
                         class="result-image"
                         v-if="result.image != null"
-                        :style="'background-image:url(/api/static/' + result.image + ')'"
+                        :style="'background-image:url(/api/static/' + encodeURIComponent(result.image.trim()) + ')'"
                       ></div>
                       <div v-if="result.image == undefined" class="result-image">
                         <div
@@ -159,7 +159,7 @@
                     </td>
                     <td>
                       <span>
-                        {{result.name}}
+                        {{result.post_title}}
                         <div
                           style="display:flex; align-items:center;  font-weight:300; color:#808080"
                         >

@@ -21,7 +21,7 @@
           <div
             v-if="result.image != null"
             class="result-panel-image"
-            :style="'background-image:url(/api/static/' + result.image + ')'"
+            :style="'background-image:url(/api/static/' + encodeURIComponent(result.image.trim()) + ')'"
           ></div>
           <div v-if="result.image == undefined" class="result-panel-image">
             <div
@@ -31,7 +31,7 @@
             </div>
           </div>
           <div class="result-panel-title-box">
-            <div class="result-panel-title">{{result.name}}</div>
+            <div class="result-panel-title">{{result.post_title}}</div>
 
             <div class="row">
               <div
@@ -290,7 +290,7 @@
                   <div
                     v-if="exec.image != null"
                     class="executive-image"
-                    :style="'background-image:url(/api/static/' + exec.image + ')'"
+                    :style="'background-image:url(/api/static/' + encodeURIComponent(exec.image.trim()) + ')'"
                   ></div>
                   <div v-if="exec.image == undefined" class="executive-image">
                     <div
@@ -300,7 +300,7 @@
                     </div>
                   </div>
                   <div>
-                    {{exec.name}}
+                    {{exec.post_title}}
                     <div
                       style="display:flex; align-items:center; font-size:8pt; font-weight:300; color:#808080"
                     >

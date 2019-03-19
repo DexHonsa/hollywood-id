@@ -11,10 +11,10 @@ var URL =
 
   router.post("/search", (req, res, next) => {
     const { term, categories, page } = req.body;
-    console.log(categories);
+    
     const reg = new RegExp(term, 'i');
     var skip = page * 10 - 10;
-    var query = {name: reg , $or: []};
+    var query = {post_title: reg , $or: []};
     function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -22,13 +22,13 @@ var URL =
       query.$or.push({titles: {$all: [capitalizeFirstLetter(categories[i])]}})
     }
     if(categories.length == 0){
-      query = {$or: [{name: reg}, {rep_name: {$regex: reg}}]}
+      query = {$or: [{post_title: reg}, {rep_name: {$regex: reg}}]}
     }
-    console.log(query);
+    
     MongoClient.connect(URL, function(err, db) {
       if (err) throw err;
       var collection = db.collection("listings");
-      var call = collection.find(query).sort({name:1}).skip(skip).limit(10);
+      var call = collection.find(query).sort({post_title:1}).skip(skip).limit(10);
       
 
       call.toArray(function(err, result){
@@ -43,12 +43,26 @@ var URL =
     });
   });
 
+  router.get('/update_ratings', (req, res)=>{
+    MongoClient.connect(URL, function(err, db){
+      if(err) throw err;
+      var collection = db.collection('listings');
+      collection.find({rating:null}).toArray().then(results=>{
+        for(let p = 0; p < results.length; p++){
+          collection.findOneAndUpdate({_id:ObjectId(results[p]._id)}, {$set:{rating: 0, number_of_ratings:0}}).then(result=>{
+            res.send({result:result});
+          })
+        }
+      })
+    })
+  })
+
   router.post("/search_pending", (req, res, next) => {
     const { term, categories, page } = req.body;
     console.log(categories);
     const reg = new RegExp(term, 'i');
     var skip = page * 10 - 10;
-    var query = {name: reg , $or: []};
+    var query = {post_title: reg , $or: []};
     function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -56,7 +70,7 @@ var URL =
       query.$or.push({titles: {$all: [capitalizeFirstLetter(categories[i])]}})
     }
     if(categories.length == 0){
-      query = {$or: [{name: reg}, {rep_name: {$regex: reg}}]}
+      query = {$or: [{post_title: reg}, {rep_name: {$regex: reg}}]}
     }
     console.log(query);
     MongoClient.connect(URL, function(err, db) {
@@ -83,7 +97,7 @@ var URL =
     console.log(query);
     MongoClient.connect(URL, function(err, db) {
       var collection = db.collection("listings");
-      collection.find({name:{$regex:query, $options : 'i'}}).toArray().then(result=>{
+      collection.find({post_title:{$regex:query, $options : 'i'}}).toArray().then(result=>{
         db.close();
         res.status(200).json(result);
       })

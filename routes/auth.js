@@ -147,7 +147,7 @@ router.post("/reset_password", (req, res) => {
             port: 25,
             auth: {
               user: "dexhonsa@gmail.com",
-              pass: "Awesomeo21!23!24!"
+              pass: "Awesomeo21!23!24!$$$"
             },
             tls: {
               rejectUnauthorized: false

@@ -1,17 +1,18 @@
 <template>
   <div class="convert-container">
     <textarea id="convert-me" class="convert-text"></textarea>
-    <div @click="convert5" class="convert-btn">Convert</div>
+    <div @click="convert1" class="convert-btn">Convert</div>
     <textarea id="converted" class="converted"></textarea>
   </div>
 </template>
 <script>
-import json from "../xlsxFiles/wp_posts.4.json";
-import meta from "./wp_postmeta.json";
-import json2 from "../xlsxFiles/wp_posts.json";
-import json3 from "../xlsxFiles/AA.2.json";
+// import json from "../xlsxFiles/wp_posts.4.json";
+import hulu from "./hulu.json";
+// import meta from "./wp_postmeta.json";
+// import json2 from "../xlsxFiles/wp_posts.json";
+// import json3 from "../xlsxFiles/AA.2.json";
 import axios from "axios";
-import listings from "../xlsxFiles/listings.json";
+// import listings from "../xlsxFiles/listings.json";
 import Promise from "bluebird";
 
 export default {
@@ -35,6 +36,27 @@ export default {
       document.getElementById("converted").innerHTML = JSON.stringify(
         converted
       );
+    },
+    convert1() {
+      var arr = [];
+      for (var i = 0; i < hulu.length; i++) {
+        var obj = {};
+        for (let p = 0; p < Object.keys(hulu[i]).length; p++) {
+          if (hulu[i][Object.keys(hulu[i])[p]] != "") {
+            obj[Object.keys(hulu[i])[p]] = hulu[i][Object.keys(hulu[i])[p]];
+          }
+        }
+        if (obj.titles != null) {
+          if (obj.titles.indexOf(",") > -1) {
+            obj.titles = obj.titles.split(",");
+          } else {
+            obj.titles = [obj.titles.trim()];
+          }
+        }
+
+        arr.push(obj);
+      }
+      document.getElementById("converted").innerHTML = JSON.stringify(arr);
     },
     convert2() {
       var text = json2;
